@@ -39,28 +39,34 @@
     </main>
 
     <script>
-        const tg = window.Telegram.WebApp;
-        tg.expand();
+        <script>
+    const tg = window.Telegram.WebApp;
+    tg.expand();
 
-        function selectProduct(name, price) {
-            tg.MainButton.text = `Подтвердить заказ: ${name}`;
-            tg.MainButton.textColor = "#000000";
-            tg.MainButton.color = "#FACC15";
-            tg.MainButton.show();
+    function selectProduct(name, price) {
+        // Меняем текст на кнопке Телеграма
+        tg.MainButton.text = `Подтвердить заказ: ${name}`;
+        tg.MainButton.textColor = "#FFFFFF";
+        tg.MainButton.color = "#EAB308"; // Твой желтый цвет
+        tg.MainButton.show();
 
-            // Очищаем старые клики, чтобы не плодились дубли
-            tg.MainButton.offClick();
+        // Очищаем старые клики (с ПРАВИЛЬНОЙ маленькой буквой c)
+        tg.MainButton.offClick(handleOrderSubmit);
 
-            // При клике на желтую кнопку отправляем данные в бота
-            tg.MainButton.onClick(function() {
-                const orderData = {
-                    product: name,
-                    price: price
-                };
-                // Отправляем JSON-строку обратно боту
-                tg.sendData(JSON.stringify(orderData));
-            });
+        // Записываем функцию отдельно, чтобы её можно было корректно стирать/вешать
+        function handleOrderSubmit() {
+            const orderData = {
+                product: name,
+                price: price
+            };
+            // Отправляем JSON строку (через О, а не ноль!)
+            tg.sendData(JSON.stringify(orderData));
         }
+
+        // Вешаем событие клика (с ПРАВИЛЬНОЙ маленькой буквой c)
+        tg.MainButton.onClick(handleOrderSubmit);
+    }
+</script>
     </script>
 </body>
 </html>
