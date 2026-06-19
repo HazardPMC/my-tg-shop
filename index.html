@@ -39,34 +39,38 @@
     </main>
 
     <script>
-        <script>
-    const tg = window.Telegram.WebApp;
-    tg.expand();
+        const tg = window.Telegram.WebApp;
+        tg.expand();
 
-    function selectProduct(name, price) {
-        // Меняем текст на кнопке Телеграма
-        tg.MainButton.text = `Подтвердить заказ: ${name}`;
-        tg.MainButton.textColor = "#FFFFFF";
-        tg.MainButton.color = "#EAB308"; // Твой желтый цвет
-        tg.MainButton.show();
+        // Создаем глобальную переменную для хранения данных текущего выбора
+        let currentOrder = null;
 
-        // Очищаем старые клики (с ПРАВИЛЬНОЙ маленькой буквой c)
-        tg.MainButton.offClick(handleOrderSubmit);
-
-        // Записываем функцию отдельно, чтобы её можно было корректно стирать/вешать
+        // Сама функция отправки теперь лежит отдельно, чтобы Telegram мог её корректно включать/выключать
         function handleOrderSubmit() {
-            const orderData = {
+            if (currentOrder) {
+                tg.sendData(JSON.stringify(currentOrder));
+            }
+        }
+
+        function selectProduct(name, price) {
+            // Сохраняем данные выбранного товара
+            currentOrder = {
                 product: name,
                 price: price
             };
-            // Отправляем JSON строку (через О, а не ноль!)
-            tg.sendData(JSON.stringify(orderData));
-        }
 
-        // Вешаем событие клика (с ПРАВИЛЬНОЙ маленькой буквой c)
-        tg.MainButton.onClick(handleOrderSubmit);
-    }
-</script>
+            // Настраиваем внешний вид главной кнопки Телеграма
+            tg.MainButton.text = `Подтвердить заказ: ${name}`;
+            tg.MainButton.textColor = "#FFFFFF";
+            tg.MainButton.color = "#EAB308";
+            tg.MainButton.show();
+
+            // Сначала ВСЕГДА удаляем прошлый обработчик клика, чтобы заказы не дублировались
+            tg.MainButton.offClick(handleOrderSubmit);
+
+            // Вешаем обработчик заново для текущего товара
+            tg.MainButton.onClick(handleOrderSubmit);
+        }
     </script>
 </body>
 </html>
