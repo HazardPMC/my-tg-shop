@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Твой Шоп Mini App</title>
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+</head>
+<body class="bg-zinc-900 text-white font-sans antialiased selection:bg-yellow-400 selection:text-black">
+
+    <header class="p-4 border-b border-zinc-800 bg-zinc-900/80 backdrop-blur sticky top-0 z-50 flex items-center justify-between">
+        <h1 class="text-xl font-black tracking-wider text-yellow-400">🔥 TG_STORE</h1>
+        <span class="text-xs bg-zinc-800 px-2 py-1 rounded-full text-zinc-400 border border-zinc-700">Каталог 2026</span>
+    </header>
+
+    <main class="p-4 space-y-6 pb-24">
+        <div class="bg-zinc-800 rounded-2xl overflow-hidden border border-zinc-700 shadow-xl">
+            <img src="https://images.unsplash.com/photo-1556821840-3a63f95609a7?w=600" alt="Худи" class="w-full h-64 object-cover">
+            <div class="p-4 space-y-2">
+                <h2 class="text-lg font-bold">Худи Oversize "Black Cloud"</h2>
+                <div class="flex items-center justify-between pt-2">
+                    <span class="text-xl font-black text-yellow-400">1 500 грн</span>
+                    <button onclick="selectProduct('Худи Oversize', '1500 грн')" class="bg-white text-black text-sm font-bold px-4 py-2 rounded-xl transition active:scale-95">Выбрать</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="bg-zinc-800 rounded-2xl overflow-hidden border border-zinc-700 shadow-xl">
+            <img src="https://images.unsplash.com/photo-1599552375245-2070c7b045e0?w=600" alt="Рашгард" class="w-full h-64 object-cover">
+            <div class="p-4 space-y-2">
+                <h2 class="text-lg font-bold">Компрессионный Рашгард "Armor"</h2>
+                <div class="flex items-center justify-between pt-2">
+                    <span class="text-xl font-black text-yellow-400">950 грн</span>
+                    <button onclick="selectProduct('Рашгард Armor', '950 грн')" class="bg-white text-black text-sm font-bold px-4 py-2 rounded-xl transition active:scale-95">Выбрать</button>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        const tg = window.Telegram.WebApp;
+        tg.expand();
+
+        function selectProduct(name, price) {
+            tg.MainButton.text = `Подтвердить заказ: ${name}`;
+            tg.MainButton.textColor = "#000000";
+            tg.MainButton.color = "#FACC15";
+            tg.MainButton.show();
+
+            // Очищаем старые клики, чтобы не плодились дубли
+            tg.MainButton.offClick();
+
+            // При клике на желтую кнопку отправляем данные в бота
+            tg.MainButton.onClick(function() {
+                const orderData = {
+                    product: name,
+                    price: price
+                };
+                // Отправляем JSON-строку обратно боту
+                tg.sendData(JSON.stringify(orderData));
+            });
+        }
+    </script>
+</body>
+</html>
