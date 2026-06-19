@@ -3,69 +3,113 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Твой Шоп Mini App</title>
-    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <title>kovalevskiy_shop</title>
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
+    <style>
+        body {
+            background: #000;
+            color: #fff;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            margin: 0;
+            padding: 15px;
+        }
+
+        .brand-header {
+            text-align: center;
+            font-size: 28px;
+            font-weight: bold;
+            margin: 20px 0;
+            color: #ff3333;
+            text-transform: lowercase;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+        }
+
+        .card {
+            background: #111;
+            border: 1px solid #333;
+            border-radius: 10px;
+            padding: 10px;
+            text-align: center;
+        }
+
+        .card img {
+            width: 100%;
+            border-radius: 5px;
+            margin-bottom: 10px;
+            display: block;
+        }
+
+        .product-name {
+            font-size: 14px;
+            margin-bottom: 5px;
+            height: 35px;
+            overflow: hidden;
+        }
+
+        .price {
+            color: #ff3333;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        button {
+            background: #fff;
+            color: #000;
+            border: none;
+            padding: 10px;
+            width: 100%;
+            font-weight: bold;
+            cursor: pointer;
+            border-radius: 5px;
+        }
+
+        button:active {
+            background: #ccc;
+        }
+    </style>
 </head>
-<body class="bg-zinc-900 text-white font-sans antialiased selection:bg-yellow-400 selection:text-black">
+<body>
 
-    <header class="p-4 border-b border-zinc-800 bg-zinc-900/80 backdrop-blur sticky top-0 z-50 flex items-center justify-between">
-        <h1 class="text-xl font-black tracking-wider text-yellow-400">🔥 TG_STORE</h1>
-        <span class="text-xs bg-zinc-800 px-2 py-1 rounded-full text-zinc-400 border border-zinc-700">Каталог 2026</span>
-    </header>
+    <div class="brand-header">kovalevskiy_shop</div>
 
-    <main class="p-4 space-y-6 pb-24">
-        <div class="bg-zinc-800 rounded-2xl overflow-hidden border border-zinc-700 shadow-xl">
-            <img src="https://images.unsplash.com/photo-1556821840-3a63f95609a7?w=600" alt="Худи" class="w-full h-64 object-cover">
-            <div class="p-4 space-y-2">
-                <h2 class="text-lg font-bold">Худи Oversize "Black Cloud"</h2>
-                <div class="flex items-center justify-between pt-2">
-                    <span class="text-xl font-black text-yellow-400">1 500 грн</span>
-                    <button onclick="selectProduct('Худи Oversize', '1500 грн')" class="bg-white text-black text-sm font-bold px-4 py-2 rounded-xl transition active:scale-95">Выбрать</button>
-                </div>
-            </div>
+    <div class="grid">
+        <div class="card">
+            <img src="photo_2026-06-19_16-41-29.jpg" alt="Zdarova Bedolagi">
+            <div class="product-name">Zdarova Bedolagi</div>
+            <div class="price">1500 грн</div>
+            <button onclick="sendOrder('Zdarova Bedolagi', '1500 грн')">ЗАКАЗАТЬ</button>
         </div>
 
-        <div class="bg-zinc-800 rounded-2xl overflow-hidden border border-zinc-700 shadow-xl">
-            <img src="https://images.unsplash.com/photo-1599552375245-2070c7b045e0?w=600" alt="Рашгард" class="w-full h-64 object-cover">
-            <div class="p-4 space-y-2">
-                <h2 class="text-lg font-bold">Компрессионный Рашгард "Armor"</h2>
-                <div class="flex items-center justify-between pt-2">
-                    <span class="text-xl font-black text-yellow-400">950 грн</span>
-                    <button onclick="selectProduct('Рашгард Armor', '950 грн')" class="bg-white text-black text-sm font-bold px-4 py-2 rounded-xl transition active:scale-95">Выбрать</button>
-                </div>
-            </div>
+        <div class="card">
+            <img src="photo_2026-06-19_16-41-40.jpg" alt="Sex Royalty">
+            <div class="product-name">Sex Royalty</div>
+            <div class="price">1500 грн</div>
+            <button onclick="sendOrder('Sex Royalty', '1500 грн')">ЗАКАЗАТЬ</button>
         </div>
-    </main>
+
+        <div class="card">
+            <img src="photo_2026-06-19_16-41-43.jpg" alt="Футболка">
+            <div class="product-name">Крутая модель</div>
+            <div class="price">1500 грн</div>
+            <button onclick="sendOrder('Крутая модель', '1500 грн')">ЗАКАЗАТЬ</button>
+        </div>
+    </div>
 
     <script>
-        const tg = window.Telegram.WebApp;
-        tg.ready(); // Сообщаем ТГ, что приложение готово
+        let tg = window.Telegram.WebApp;
         tg.expand();
 
-        // Объявляем глобальный объект для хранения выбранного товара
-        window.currentOrder = {
-            product: "",
-            price: ""
-        };
-
-        // Навешиваем событие клика на MainButton ОДИН РАЗ при старте приложения
-        tg.MainButton.onClick(function() {
-            if (window.currentOrder.product !== "") {
-                // Отправляем данные в бота
-                tg.sendData(JSON.stringify(window.currentOrder));
-            }
-        });
-
-        function selectProduct(name, price) {
-            window.currentOrder.product = name;
-            window.currentOrder.price = price;
-
-            // ОБРАТИ ВНИМАНИЕ: Обернуто в косые кавычки ` ` для корректной работы переменной ${name}
-            tg.MainButton.text = `Подтвердить заказ: ${name}`;
-            tg.MainButton.textColor = "#FFFFFF";
-            tg.MainButton.color = "#EAB308";
-            tg.MainButton.show();
+        function sendOrder(product, price) {
+            const data = {
+                product: product,
+                price: price
+            };
+            tg.sendData(JSON.stringify(data));
         }
     </script>
 </body>
